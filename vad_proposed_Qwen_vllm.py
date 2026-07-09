@@ -7,7 +7,7 @@ from fastprogress import progress_bar
 from functions.text_func import make_text_embedding
 from functions.qwen_hf_func import make_instruction, load_lvlm, qwen_make_messages, lvlm_test
 from functions.attn_func import winclip_attention
-from functions.grid_func import grid_generation, four_generation
+from functions.grid_func import grid_generation
 from functions.key_func import KFS
 from functions.eval_func import evaluate_auc
 import clip
