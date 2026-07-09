@@ -44,12 +44,9 @@ def load_lvlm(model_path):
     model.eval()
 
     generation_config = {
-        "temperature": 0.1,
-        "top_p": 0.001,
-        "repetition_penalty": 1.05,
-        "max_new_tokens": 50,
-        "do_sample": True,
-    }
+    "max_new_tokens": 50,
+    "do_sample": False,
+}
 
     return model, processor, generation_config
 
