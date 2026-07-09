@@ -1,7 +1,5 @@
 import torch
-import os
-import sys
-from PIL import Image
+
 from transformers import (
     AutoProcessor,
     Qwen2_5_VLForConditionalGeneration
@@ -32,13 +30,18 @@ For intermediate cases, assign a value between 0 and 1 based on the degree to wh
 
 def load_lvlm(model_path):
 
-    processor = AutoProcessor.from_pretrained(model_path)
+    processor = AutoProcessor.from_pretrained(
+    model_path,
+    trust_remote_code=True,
+)
 
     model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-        model_path,
-        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-        device_map="auto"
-    )
+    model_path,
+    trust_remote_code=True,
+    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+    device_map="auto",
+)
+    model.eval()
 
     generation_config = {
         "temperature": 0.1,
@@ -100,12 +103,13 @@ def lvlm_test(model, processor, generation_config, message_list):
 
         inputs = inputs.to(device)
 
-        generated_ids = model.generate(
-            **inputs,
-            **generation_config
-        )
+        with torch.inference_mode():
+         generated_ids = model.generate(
+          **inputs,
+          **generation_config
+    )
 
-        generated_ids_trimmed = [
+         generated_ids_trimmed = [
             out_ids[len(in_ids):]
             for in_ids, out_ids in zip(
                 inputs.input_ids,
