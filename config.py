@@ -4,7 +4,7 @@ os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
 if not os.path.exists('results'):
     os.mkdir('results')
 
-share_config = {'data_root': '/home/anonymous/datasets',
+share_config = {'data_root': '/kaggle/working/datasets',
                 'cdata_root': 'ground_truth'
                 } 
 
