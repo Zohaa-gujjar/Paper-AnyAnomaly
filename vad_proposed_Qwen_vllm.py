@@ -68,6 +68,18 @@ def main():
 
     video_names, video_paths = load_names_paths(cfg)
 
+
+    #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
+      
+    # REMEMBER TO REVERT (remove this chunk in dollar signs) THIS CHANGE, IT IS ONLY FOR TESTING PURPOSES
+    video_names = video_names[:1]
+    video_paths = video_paths[:1]
+
+    print("=" * 60)
+    print("Testing only:", video_names)
+    print("=" * 60)
+    #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
+
     predict_file_name = f'results/{cfg.dataset_name}/{cfg.type}/{cfg.prompt_type}/qwen_vllm_proposed_{cfg.dataset_name}_{cfg.type}_{cfg.prompt_type}.json'
 
     keyword_list = load_keyword_list(cfg)
