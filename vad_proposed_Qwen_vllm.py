@@ -72,13 +72,25 @@ def main():
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
       
     # REMEMBER TO REVERT (remove this chunk in dollar signs) THIS CHANGE, IT IS ONLY FOR TESTING PURPOSES
-    test_video = "03_0059"
+    # TEMPORARY BATCH TEST
+    test_videos = [
+      "03_0059",  # fighting
+      "05_0019",  # fighting
+      "03_0032",  # falling
+      "03_0033",  # falling
+      "01_0139", ]  # non-fighting comparison
 
-    video_names = [test_video]
-    video_paths = [os.path.join(cfg.test_data_path, test_video)]
+
+    video_names = test_videos
+
+    video_paths = [
+       os.path.join(cfg.test_data_path, video)
+       for video in test_videos]
+
 
     print("=" * 60)
-    print("Testing only:", video_names)
+    print("Batch testing videos:", video_names)
+    print("Number of videos:", len(video_names))
     print("=" * 60)
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
 
