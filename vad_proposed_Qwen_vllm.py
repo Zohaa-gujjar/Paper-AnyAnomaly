@@ -171,7 +171,7 @@ def main():
         print('--------------------------------------')
 
         gt_loader = label_loader(cfg.cdata_root, cfg.dataset_name, cfg.type, multiple=cfg.multiple)
-        gt_arr = gt_loader.load_dict()
+        gt_dict = gt_loader.load_dict()
 
         predicted = []
         predicted_wa = []
@@ -180,12 +180,16 @@ def main():
 
         with open(predict_file_name, 'r') as file:
             data = json.load(file)
-            for i, item in enumerate(data):
-                predicted.append(np.array(item['scores']))
-                predicted_wa.append(np.array(item['scores_wa']))
-                predicted_tc.append(np.array(item['scores_tc']))
-                video_name = item['video']
-            label_arr.append(gt_arr[video_name][:len(item['scores'])])
+            for item in data:
+             video_name = item['video']
+
+             predicted.append(np.array(item['scores']))
+             predicted_wa.append(np.array(item['scores_wa']))
+             predicted_tc.append(np.array(item['scores_tc']))
+
+             label_arr.append(
+                gt_dict[video_name][:len(item['scores'])])
+               
             predicted = np.concatenate(predicted, axis=0)
             predicted_wa = np.concatenate(predicted_wa, axis=0)
             predicted_tc = np.concatenate(predicted_tc, axis=0)
