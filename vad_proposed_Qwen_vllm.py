@@ -171,7 +171,7 @@ def main():
         print('--------------------------------------')
 
         gt_loader = label_loader(cfg.cdata_root, cfg.dataset_name, cfg.type, multiple=cfg.multiple)
-        gt_arr = gt_loader.load()  
+        gt_arr = gt_loader.load_dict()
 
         predicted = []
         predicted_wa = []
@@ -184,7 +184,8 @@ def main():
                 predicted.append(np.array(item['scores']))
                 predicted_wa.append(np.array(item['scores_wa']))
                 predicted_tc.append(np.array(item['scores_tc']))
-                label_arr.append(gt_arr[i][:len(item['scores'])])
+                video_name = item['video']
+            label_arr.append(gt_arr[video_name][:len(item['scores'])])
             predicted = np.concatenate(predicted, axis=0)
             predicted_wa = np.concatenate(predicted_wa, axis=0)
             predicted_tc = np.concatenate(predicted_tc, axis=0)

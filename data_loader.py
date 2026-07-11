@@ -62,3 +62,10 @@ class label_loader:
                 gt.append(np.array(f[key]))
         return gt
     
+    def load_dict(self):
+        gt = {}
+        with h5py.File(self.fpath, 'r') as f:
+            for key in f:
+                gt[key] = np.array(f[key])
+        return gt
+    
