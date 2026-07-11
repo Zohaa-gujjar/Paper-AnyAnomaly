@@ -72,8 +72,10 @@ def main():
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
       
     # REMEMBER TO REVERT (remove this chunk in dollar signs) THIS CHANGE, IT IS ONLY FOR TESTING PURPOSES
-    video_names = video_names[:1]
-    video_paths = video_paths[:1]
+    test_video = "01_0025"
+
+    video_names = [test_video]
+    video_paths = [os.path.join(cfg.test_data_path, test_video)]
 
     print("=" * 60)
     print("Testing only:", video_names)
