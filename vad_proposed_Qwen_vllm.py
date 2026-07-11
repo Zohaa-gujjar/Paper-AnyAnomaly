@@ -72,7 +72,7 @@ def main():
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
       
     # REMEMBER TO REVERT (remove this chunk in dollar signs) THIS CHANGE, IT IS ONLY FOR TESTING PURPOSES
-    test_video = "01_0025"
+    test_video = "03_0059"
 
     video_names = [test_video]
     video_paths = [os.path.join(cfg.test_data_path, test_video)]
