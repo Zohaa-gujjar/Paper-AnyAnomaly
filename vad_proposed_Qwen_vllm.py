@@ -67,8 +67,10 @@ def main():
     print(device)
 
     video_names, video_paths = load_names_paths(cfg)
+    print("Total videos loaded:", len(video_names))
 
-
+    """
+    TO RUN A BATCH OF ONLY 5 VIDEOS, UNCOMMENT THE FOLLOWING CHUNK OF CODE AND COMMENT OUT THE ABOVE TWO LINES
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
       
     # REMEMBER TO REVERT (remove this chunk in dollar signs) THIS CHANGE, IT IS ONLY FOR TESTING PURPOSES
@@ -93,7 +95,7 @@ def main():
     print("Number of videos:", len(video_names))
     print("=" * 60)
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
-
+    """
     predict_file_name = f'results/{cfg.dataset_name}/{cfg.type}/{cfg.prompt_type}/qwen_vllm_proposed_{cfg.dataset_name}_{cfg.type}_{cfg.prompt_type}.json'
 
     keyword_list = load_keyword_list(cfg)
@@ -117,8 +119,11 @@ def main():
 
         dict_arr = []
         print_check = True
-        debug_file = open("hf_debug_log.txt", "w", encoding="utf-8")
 
+        """
+        #*#*#*#*#*  Tocreate Log file uncomment these parts  #*#*#*#*#* 
+        debug_file = open("hf_debug_log.txt", "w", encoding="utf-8") Commented this cuzz it was added to create the log file for the model responses (for WA and TC), but it was not being used anywhere else in the code. So I commented it out to avoid confusion.
+        """
         with open(predict_file_name, 'w') as file:
             for i, video_path in progress_bar(enumerate(video_paths), total=len(video_paths)):
                 predicted = []
@@ -149,8 +154,10 @@ def main():
 
                         responses = lvlm_test(model, processor, sampling_params, message_list)
 
-                        # ---------- TO PRINT MODEL RESPONSES (ZOHAA ADDED IT) ----------
+                        """
+                        # #*#*#*#*#* ---------- TO PRINT MODEL RESPONSES (ZOHAA ADDED IT) ----------#*#*#*#*#* 
                         # Did this change because the WA and TC responses are coming zero and the model is printing them for every frame, but i only need the disagreeing ones.
+                        
                         score = generate_output(responses[0])['score']
                         score_wa = generate_output(responses[1])['score']
                         score_tc = generate_output(responses[2])['score']
@@ -180,7 +187,11 @@ def main():
                             debug_file.write(f"Parsed WA       : {score_wa}\n")
                             debug_file.write(f"Parsed TC       : {score_tc}\n\n")
                             debug_file.flush()
-
+                         
+                         """
+                        score = generate_output(responses[0])['score']
+                        score_wa = generate_output(responses[1])['score']
+                        score_tc = generate_output(responses[2])['score']
                         max_score = max(max_score, score)
                         max_score_wa = max(max_score_wa, score_wa)
                         max_score_tc = max(max_score_tc, score_tc)
@@ -200,7 +211,7 @@ def main():
 
             json.dump(dict_arr, file, indent=4)
 
-        debug_file.close()
+        # #*#*#*#*#*  debug_file.close() This was also a part of the log file creation
 
 
     '''
