@@ -147,6 +147,20 @@ def main():
                         message_list = [messages_key, messages_wa, messages_tc]
 
                         responses = lvlm_test(model, processor, sampling_params, message_list)
+                        print("\n" + "=" * 90)
+                        print(f"VIDEO   : {video_name}")
+                        print(f"KEYWORD : {keyword}")
+
+                        print("\n[ORIGINAL RESPONSE]")
+                        print(repr(responses[0]))
+
+                        print("\n[WA RESPONSE]")
+                        print(repr(responses[1]))
+
+                        print("\n[TC RESPONSE]")
+                        print(repr(responses[2]))
+
+                        print("=" * 90 + "\n")
                         score = generate_output(responses[0])['score']
                         score_wa = generate_output(responses[1])['score']
                         score_tc = generate_output(responses[2])['score']
