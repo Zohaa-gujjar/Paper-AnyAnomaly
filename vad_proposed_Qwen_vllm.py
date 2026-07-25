@@ -117,6 +117,7 @@ def main():
 
         dict_arr = []
         print_check = True
+        debug_file = open("hf_debug_log.txt", "w", encoding="utf-8")
 
         with open(predict_file_name, 'w') as file:
             for i, video_path in progress_bar(enumerate(video_paths), total=len(video_paths)):
@@ -147,23 +148,38 @@ def main():
                         message_list = [messages_key, messages_wa, messages_tc]
 
                         responses = lvlm_test(model, processor, sampling_params, message_list)
-                        print("\n" + "=" * 90)
-                        print(f"VIDEO   : {video_name}")
-                        print(f"KEYWORD : {keyword}")
 
-                        print("\n[ORIGINAL RESPONSE]")
-                        print(repr(responses[0]))
-
-                        print("\n[WA RESPONSE]")
-                        print(repr(responses[1]))
-
-                        print("\n[TC RESPONSE]")
-                        print(repr(responses[2]))
-
-                        print("=" * 90 + "\n")
+                        # ---------- TO PRINT MODEL RESPONSES (ZOHAA ADDED IT) ----------
+                        # Did this change because the WA and TC responses are coming zero and the model is printing them for every frame, but i only need the disagreeing ones.
                         score = generate_output(responses[0])['score']
                         score_wa = generate_output(responses[1])['score']
                         score_tc = generate_output(responses[2])['score']
+
+                        # Only log interesting cases
+                        if (
+                            score != score_wa
+                            or score != score_tc
+                            or score >= 0.5
+                            or score_wa >= 0.5
+                            or score_tc >= 0.5
+                        ):
+                            debug_file.write("=" * 80 + "\n")
+                            debug_file.write(f"VIDEO : {video_name}\n")
+                            debug_file.write(f"KEYWORD : {keyword}\n\n")
+
+                            debug_file.write("[ORIGINAL]\n")
+                            debug_file.write(repr(responses[0]) + "\n\n")
+
+                            debug_file.write("[WA]\n")
+                            debug_file.write(repr(responses[1]) + "\n\n")
+
+                            debug_file.write("[TC]\n")
+                            debug_file.write(repr(responses[2]) + "\n\n")
+
+                            debug_file.write(f"Parsed Original : {score}\n")
+                            debug_file.write(f"Parsed WA       : {score_wa}\n")
+                            debug_file.write(f"Parsed TC       : {score_tc}\n\n")
+                            debug_file.flush()
 
                         max_score = max(max_score, score)
                         max_score_wa = max(max_score_wa, score_wa)
@@ -180,9 +196,11 @@ def main():
                                'scores_tc':predicted_tc}
                 dict_arr.append(output_dict)
 
-                print(i, 'video:', video_path)
+                print(f"✅ Finished video {i+1}/{len(video_paths)} : {video_name}")
 
             json.dump(dict_arr, file, indent=4)
+
+        debug_file.close()
 
 
     '''
