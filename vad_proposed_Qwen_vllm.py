@@ -66,22 +66,31 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
     print(device)
 
-    video_names, video_paths = load_names_paths(cfg)
+    # video_names, video_paths = load_names_paths(cfg)
     print("Total videos loaded:", len(video_names))
 
-    """
-    TO RUN A BATCH OF ONLY 5 VIDEOS, UNCOMMENT THE FOLLOWING CHUNK OF CODE AND COMMENT OUT THE ABOVE TWO LINES
+    
+    #TO RUN A BATCH OF ONLY 5 VIDEOS, UNCOMMENT THE FOLLOWING CHUNK OF CODE AND COMMENT OUT THE ABOVE TWO LINES
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
       
     # REMEMBER TO REVERT (remove this chunk in dollar signs) THIS CHANGE, IT IS ONLY FOR TESTING PURPOSES
     # TEMPORARY BATCH TEST
     test_videos = [
       "03_0059",  # fighting
+      "05_0017",  # throwing
       "05_0019",  # fighting
+      "04_0010",  # loitering
+      "12_0143",  # car
+      "10_007",   # running
+      "01_0026",  # fighting
+      "10_0042",  # motorcycle
+      "07_0047",  # fighting
+      "07_0006",  # falling
+      "04_0046",  # throwing
       "03_0032",  # falling
       "03_0033",  # falling
-      "01_0139", ]  # non-fighting comparison
-
+      "01_0139",  # non-fighting comparison
+      "13_005",]  
 
     video_names = test_videos
 
@@ -95,7 +104,7 @@ def main():
     print("Number of videos:", len(video_names))
     print("=" * 60)
     #------------------------$$$$$$$$$$$$$$$$$$$$$$$$$_________________________
-    """
+   
     predict_file_name = f'results/{cfg.dataset_name}/{cfg.type}/{cfg.prompt_type}/qwen_vllm_proposed_{cfg.dataset_name}_{cfg.type}_{cfg.prompt_type}.json'
 
     keyword_list = load_keyword_list(cfg)
