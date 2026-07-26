@@ -81,7 +81,7 @@ def main():
       "05_0019",  # fighting
       "04_0010",  # loitering
       "12_0143",  # car
-      "10_007",   # running
+      "07_0005",   # throwing
       "01_0026",  # fighting
       "10_0042",  # motorcycle
       "07_0047",  # fighting
@@ -90,7 +90,7 @@ def main():
       "03_0032",  # falling
       "03_0033",  # falling
       "01_0139",  # non-fighting comparison
-      "13_005",]  
+      "01_0016",]  
 
     video_names = test_videos
 
