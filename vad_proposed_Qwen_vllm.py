@@ -269,57 +269,55 @@ def main():
             video_names=video_names,
             label_arr=label_arr
         )
+        # ---------------- SUMMARY TABLE ----------------
         import pandas as pd
 
         summary = []
 
         for item in data:
+            video = item["video"]
+            original = np.asarray(item["scores"], dtype=float)
+            wa = np.asarray(item["scores_wa"], dtype=float)
+            tc = np.asarray(item["scores_tc"], dtype=float)
+            gt_has_anomaly = bool(np.any(gt_dict[video] == 1))
 
-          video = item["video"]
+            # A video shorter than cfg.clip_length has no complete clip and
+            # therefore no prediction scores. Keep it in the table, but do
+            # not call np.max/np.mean on its empty arrays.
+            if original.size == 0 or wa.size == 0 or tc.size == 0:
+                summary.append({
+                    "Video": video,
+                    "GT Contains Anomaly": gt_has_anomaly,
+                    "Original Max": None,
+                    "WA Max": None,
+                    "TC Max": None,
+                    "Original Mean": None,
+                    "WA Mean": None,
+                    "TC Mean": None,
+                    "Winner": "No scores",
+                })
+                continue
 
-          original = np.array(item["scores"])
-          wa = np.array(item["scores_wa"])
-          tc = np.array(item["scores_tc"])
+            original_max = float(np.max(original))
+            wa_max = float(np.max(wa))
+            tc_max = float(np.max(tc))
+            original_mean = float(np.mean(original))
+            wa_mean = float(np.mean(wa))
+            tc_mean = float(np.mean(tc))
+            values = {"Original": original_max, "WA": wa_max, "TC": tc_max}
+            winner = "None" if max(values.values()) == 0 else max(values, key=values.get)
 
-          labels_video = gt_dict[video][:len(original)]
-
-          gt_has_anomaly = bool(np.any(labels_video == 1))
-
-          original_max = float(np.max(original))
-          wa_max = float(np.max(wa))
-          tc_max = float(np.max(tc))
-
-          original_mean = float(np.mean(original))
-          wa_mean = float(np.mean(wa))
-          tc_mean = float(np.mean(tc))
-
-          values = {
-            "Original": original_max,
-            "WA": wa_max,
-            "TC": tc_max
-         }
-
-        winner = max(values, key=values.get)
-
-        if max(values.values()) == 0:
-         winner = "None"
-
-        summary.append({
-
-         "Video": video,
-
-         "GT Contains Anomaly": gt_has_anomaly,
-
-         "Original Max": round(original_max,4),
-         "WA Max": round(wa_max,4),
-         "TC Max": round(tc_max,4),
-
-         "Original Mean": round(original_mean,4),
-         "WA Mean": round(wa_mean,4),
-         "TC Mean": round(tc_mean,4),
-
-         "Winner": winner
-    })
+            summary.append({
+                "Video": video,
+                "GT Contains Anomaly": gt_has_anomaly,
+                "Original Max": round(original_max, 4),
+                "WA Max": round(wa_max, 4),
+                "TC Max": round(tc_max, 4),
+                "Original Mean": round(original_mean, 4),
+                "WA Mean": round(wa_mean, 4),
+                "TC Mean": round(tc_mean, 4),
+                "Winner": winner,
+            })
 
         summary_df = pd.DataFrame(summary)
 
@@ -330,7 +328,7 @@ def main():
 
         print("\nSummary table saved as WA_TC_summary.csv")
         print(summary_df)
-        
+        # ------------- END OF SUMMARY TABLE -------------
         print('--------------------------------------')
         print('Evaluation completed!')
         print(f"Final AUC: {eval_results['combi_best_auc']:.4f}")
