@@ -67,7 +67,7 @@ def main():
     print(device)
 
     # video_names, video_paths = load_names_paths(cfg)
-    print("Total videos loaded:", len(video_names))
+    #print("Total videos loaded:", len(video_names))
 
     
     #TO RUN A BATCH OF ONLY 5 VIDEOS, UNCOMMENT THE FOLLOWING CHUNK OF CODE AND COMMENT OUT THE ABOVE TWO LINES
