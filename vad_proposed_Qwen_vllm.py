@@ -269,6 +269,67 @@ def main():
             video_names=video_names,
             label_arr=label_arr
         )
+        import pandas as pd
+
+        summary = []
+
+        for item in data:
+
+          video = item["video"]
+
+          original = np.array(item["scores"])
+          wa = np.array(item["scores_wa"])
+          tc = np.array(item["scores_tc"])
+
+          labels_video = gt_dict[video][:len(original)]
+
+          gt_has_anomaly = bool(np.any(labels_video == 1))
+
+          original_max = float(np.max(original))
+          wa_max = float(np.max(wa))
+          tc_max = float(np.max(tc))
+
+          original_mean = float(np.mean(original))
+          wa_mean = float(np.mean(wa))
+          tc_mean = float(np.mean(tc))
+
+          values = {
+            "Original": original_max,
+            "WA": wa_max,
+            "TC": tc_max
+         }
+
+        winner = max(values, key=values.get)
+
+        if max(values.values()) == 0:
+         winner = "None"
+
+        summary.append({
+
+         "Video": video,
+
+         "GT Contains Anomaly": gt_has_anomaly,
+
+         "Original Max": round(original_max,4),
+         "WA Max": round(wa_max,4),
+         "TC Max": round(tc_max,4),
+
+         "Original Mean": round(original_mean,4),
+         "WA Mean": round(wa_mean,4),
+         "TC Mean": round(tc_mean,4),
+
+         "Winner": winner
+    })
+
+        summary_df = pd.DataFrame(summary)
+
+        summary_df.to_csv(
+         "WA_TC_summary.csv",
+          index=False
+       )
+
+        print("\nSummary table saved as WA_TC_summary.csv")
+        print(summary_df)
         
         print('--------------------------------------')
         print('Evaluation completed!')
